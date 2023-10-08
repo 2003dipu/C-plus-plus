@@ -1,96 +1,165 @@
-// Tic Tac Toe in C++
+// implementing a minimax algorithm in C++ is a daunting task, however I didn't put in much time there
+
 #include <iostream>
+#include <vector>
+#include <cstdlib>
 #include <ctime>
 
-const int BOARD_SIZE = 3;
-void drawBoard(char *spaces) // 9 lines of code
-{
-    std::cout << "\n";
-    for (int i = 0; i < BOARD_SIZE; i++)
-    {
-        std::cout << "     |     |     \n  " << spaces[i * BOARD_SIZE + 0] << "  |  " << spaces[i * BOARD_SIZE + 1] 
-        << "  |  " << spaces[i * BOARD_SIZE + 2] << "  \n_____|_____|_____\n";
+class Player {
+public:
+    char letter;
+
+    Player(char _letter) : letter(_letter) {}
+
+    virtual int get_move(const std::vector<char>& board) {
+        return -1; // Placeholder value
     }
-    std::cout << "\n";
-}
+};
 
-void playerMove(char *spaces, char player) // 11 lines of code
-{
-    int number;
-    do
-    {
-        std::cout << "Enter a spot to place a marker (1-9): ";
-        std::cin >> number;
-        number--;
-    } while (spaces[number] != ' ' || number < 0 || number > 8);
-    spaces[number] = player;
-}
-void computerMove(char *spaces, char computer) // 10 lines of code
-{
-    int number;
-    srand(time(0));
-    do
-    {
-        number = rand() % 9;
-    } while (spaces[number] != ' ');
-    spaces[number] = computer;
-}
-// 32 lines to 9 lines
+class RandomComputerPlayer : public Player {
+public:
+    RandomComputerPlayer(char _letter) : Player(_letter) {}
 
-bool checkWinner(char *spaces, char player, char computer)// 14 lines of code
-{// possible winning combinations
-    int win[8][3] = {{0, 1, 2}, {3, 4, 5}, {6, 7, 8}, {0, 3, 6}, {1, 4, 7}, {2, 5, 8}, {0, 4, 8}, {2, 4, 6}}; // 2D array
-    for (int i = 0; i < 8; i++)
-    {                               // loop through each combination
-        char c = spaces[win[i][0]]; // get the first character of the combination
-        if ((c != ' ') && (c == spaces[win[i][1]]) && (c == spaces[win[i][2]]))
-        {// check if all three characters are the same and not empty | // print the result
-            std::cout << (c == player ? "YOU WIN!\nYour Points: 1\nComputer's Points: 0\n" : 
-            "YOU LOSE!\nComputer Wins\nComputer's Points: 1\nYour Points: 0\n");
-            return true;// return true to indicate a winner
+    int get_move(const std::vector<char>& board) override {
+        std::vector<int> available_moves;
+        for (int i = 0; i < 9; ++i) {
+            if (board[i] == ' ') {
+                available_moves.push_back(i);
+            }
         }
+        if (!available_moves.empty()) {
+            int random_index = rand() % available_moves.size();
+            return available_moves[random_index];
+        }
+        return -1; // No available moves
     }
-    return false; // return false to indicate no winner
-}
+};
 
-bool checkTie(char *spaces) // 10 lines of code
-{
-    for (int i = 0; i < 9; i++)
-    {
-        if (spaces[i] == ' ')
+class HumanPlayer : public Player {
+public:
+    HumanPlayer(char _letter) : Player(_letter) {}
+
+    int get_move(const std::vector<char>& board) override {
+        int move;
+        do {
+            std::cout << "Enter your move (0-8): ";
+            std::cin >> move;
+        } while (move < 0 || move > 8 || board[move] != ' ');
+
+        return move;
+    }
+};
+
+class TicTacToe {
+public:
+    std::vector<char> board;
+    char current_winner;
+
+    TicTacToe() : board(9, ' '), current_winner(' ') {}
+
+    void print_board() const {
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 3; ++j) {
+                std::cout << "|" << board[i * 3 + j];
+            }
+            std::cout << "|\n";
+        }std::cout << "\n";
+    }
+
+    std::vector<int> available_moves() const {
+        std::vector<int> moves;
+        for (int i = 0; i < 9; ++i) {
+            if (board[i] == ' ') {
+                moves.push_back(i);
+            }
+        }
+        return moves;
+    }
+
+    bool make_move(int square, char letter) {
+        if (square < 0 || square >= 9 || board[square] != ' ') {
             return false;
+        }
+        board[square] = letter;
+        return true;
     }
-    std::cout << "IT'S A TIE!\n";
-    return true;
+
+    bool is_winner(char letter) const {
+        // Check rows, columns, and diagonals for a win
+        for (int i = 0; i < 3; ++i) {
+            if ((board[i] == letter && board[i + 3] == letter && board[i + 6] == letter) || // Check columns
+                (board[i * 3] == letter && board[i * 3 + 1] == letter && board[i * 3 + 2] == letter)) { // Check rows
+                return true;
+            }
+        }
+
+        // Check diagonals
+        if ((board[0] == letter && board[4] == letter && board[8] == letter) ||
+            (board[2] == letter && board[4] == letter && board[6] == letter)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    bool is_board_full() const {
+        for (char cell : board) {
+            if (cell == ' ') {
+                return false;
+            }
+        }
+        return true;
+    }
+};
+
+void play_game(TicTacToe& game, Player& player1, Player& player2) {
+    char current_player = 'X';
+
+    while (true) {
+        game.print_board();
+
+        if (current_player == 'X') {
+            int move = player1.get_move(game.board);
+            game.make_move(move, 'X');
+
+            if (game.is_winner('X')) {
+                game.print_board();
+                std::cout << "Player X wins!\n";
+                break;
+            }
+            if (game.is_board_full()) {
+                game.print_board();
+                std::cout << "It's a tie!\n";
+                break;
+            }
+            current_player = 'O';
+        } else {
+            int move = player2.get_move(game.board);
+            game.make_move(move, 'O');
+
+            if (game.is_winner('O')) {
+                game.print_board();
+                std::cout << "Player O wins!\n";
+                break;
+            }
+            if (game.is_board_full()) {
+                game.print_board();
+                std::cout << "It's a tie!\n";
+                break;
+            }
+            current_player = 'X';
+        }
+    }
 }
 
-int main() // 40 lines of code
-{
-    char spaces[9] = {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '};
-    char player = 'X';
-    char computer = 'O';
-    bool running = true;
-    drawBoard(spaces);
+int main() {
+    srand(static_cast<unsigned>(time(nullptr)));
 
-    while (running)
-    {
-        computerMove(spaces, computer);
-        drawBoard(spaces);
-        if (checkWinner(spaces, player, computer) || checkTie(spaces))
-        {
-            running = false;
-            break;
-        }
+    HumanPlayer player1('X');
+    RandomComputerPlayer player2('O');
+    TicTacToe game;
 
-        playerMove(spaces, player);
-        drawBoard(spaces);
-        if (checkWinner(spaces, player, computer) || checkTie(spaces))
-        {
-            running = false;
-            break;
-        }
-    }
-    std::cout << "Thanks for playing!\n";
+    play_game(game, player1, player2);
 
     return 0;
-} // 96 lines of code
+}
