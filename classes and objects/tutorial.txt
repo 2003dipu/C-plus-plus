@@ -1,0 +1,104 @@
+Sure, I can help you with that. Here is a script for my video tutorial:
+
+Hello, and welcome to my C++ tutorial for beginners. In this video, I will show you how to create a class and an 
+object in C++, and how to access their attributes and methods.
+
+A class is a user-defined data type that can contain data members and member functions. Data members are variables 
+that store the state of an object, and member functions are functions that perform actions on the object. An object 
+is an instance of a class, which means it has its own set of data members and member functions.
+
+To create a class, we use the keyword class followed by the class name and a pair of curly braces. Inside the curly
+ braces, we can declare the data members and member functions of the class. For example, let's create a class 
+ called Car that has four data members: make, model, year, and color. 
+ We can also declare two member functions: accelerate and brake, which will print some messages to the console.
+
+class Car
+{
+private:
+    /* data */
+public:
+    string make;
+    string model;
+    int year;
+    string color;
+    // methods
+    void accelerate()
+    {
+        cout << "You step on the gas.\n";
+    }
+    void brake()
+    {
+        cout << "You step on the brake";
+    }
+
+}; // Car class ends here
+
+Notice that we use the access specifier public before the data members and member functions. This means that they 
+can be accessed from outside the class. If we use private instead, they can only be accessed from within the class
+or by its friends. By default, all members of a class are private unless specified otherwise.
+
+To create an object of a class, we use the class name followed by the object name. For example, let's create an 
+object of Car called car1.
+
+Car car1; // car1 is an unique identifier for the Car object
+
+Now we can access the data members and member functions of car1 using the dot operator (.). For example, we can 
+assign some values to the data members of car1 like this:
+
+car1.make = "Ford";
+car1.model = "Mustang";
+car1.year = 2023;
+car1.color = "silver";
+
+We can also print the values of the data members using cout like this:
+
+cout << "car1 make\t\t" << car1.make << "\n";
+cout << "car1 model\t\t" << car1.model << "\n";
+cout << "car1 year\t\t" << car1.year<< "\n";
+cout << "car1 color\t\t" << car1.color << "\n";
+
+And we can call the member functions of car1 like this:
+
+car1.accelerate();
+car1.brake();
+
+This will produce the following output:
+
+car1 make		Ford
+car1 model		Mustang
+car1 year		2023
+car1 color		silver
+You step on the gas.
+You step on the brake
+
+We can create multiple objects of the same class with different values for their data members. For example, we can
+ create another object of Car called car2 and assign different values to its data members.
+
+Car car2; // car2 is another identifier for the Car object
+car2.make = "Toyota";
+car2.model = "Corolla";
+car2.year = 2020;
+car2.color = "red";
+
+We can then print the values of car2's data members and call its member functions as well.
+
+cout << "car2 make\t\t" << car2.make << "\n";
+cout << "car2 model\t\t" << car2.model << "\n";
+cout << "car2 year\t\t" << car2.year<< "\n";
+cout << "car2 color\t\t" << car2.color << "\n";
+
+car2.accelerate();
+car2.brake();
+
+This will produce the following output:
+
+car2 make		Toyota
+car2 model		Corolla
+car2 year		2020
+car2 color		red
+You step on the gas.
+You step on the brake
+
+That's it for this video. I hope you learned something new about classes and objects in C++. If you have any 
+questions or feedback, please leave them in the comments below. Thank you for watching and happy coding!
+
