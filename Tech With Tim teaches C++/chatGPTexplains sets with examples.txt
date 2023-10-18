@@ -1,0 +1,46 @@
+Certainly, let's break it down step by step with sample values to make it easier to understand. Suppose we have the 
+following values for `test` and `find`:
+
+```cpp
+string test = "\nThis is an example of speech synthesis in English.\n";
+string find = "hello dear";
+```
+
+1. First, we create sets to store unique characters from both strings:
+
+```cpp
+set<char> testSet(test.begin(), test.end());
+set<char> findSet(find.begin(), find.end());
+```
+
+Now, let's see what these sets contain:
+
+For `testSet`:
+
+- `test.begin()` points to the beginning of the `test` string, which is the character '\n'. So, `testSet` contains
+'\n'.
+- As we move to the next character, it's 'T'. So, `testSet` now contains {'\n', 'T'}.
+- Continuing this process for all characters in the `test` string, `testSet` will eventually contain all unique 
+characters from the `test` string, excluding spaces, and the result will be something like:
+
+```cpp
+testSet = {'\n', 'T', 'h', 'i', 's', 'a', 'n', 'e', 'x', 'm', 'p', 'l', 'o', 'f', 'c', 'y', 't', 'g', '.'}
+```
+
+For `findSet`:
+
+- `find.begin()` points to the beginning of the `find` string, which is the character 'h'. So, `findSet` contains
+ 'h'.
+- As we move to the next character, it's 'e'. So, `findSet` now contains {'h', 'e'}.
+- Continuing this process for all characters in the `find` string, `findSet` will eventually contain all unique 
+characters from the `find` string, and the result will be:
+
+```cpp
+findSet = {'h', 'e', 'l', 'o', ' ', 'd', 'a', 'r'}
+```
+
+Now, you have two sets, `testSet` and `findSet`, that store unique characters from their respective strings.
+
+The purpose of using these sets is to efficiently check if all characters from `find` are present in `test`. 
+This is done in the subsequent part of the code where we iterate through `findSet` and check if each 
+ is also present in `testSet`. If they are, it means all characters in `find` are in `test`.
